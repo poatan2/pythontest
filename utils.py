@@ -1,0 +1,2 @@
+def getTitle():
+    return "title"
