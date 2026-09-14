@@ -15,3 +15,31 @@ jobs:
           python-version: "3.13"
       - run: pip install -r requirements.txt
       - run: pytest
+
+  build:
+    needs: [run-test-code]  # 위의 job이 끝나고 이 job을 시작
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: Set Up python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run:
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Login to DockerHub
+        uses: docker/login-actions
+        with:
+          username: ${{ secret.DOKCERHUB_USERNAME}}
+          password: ${{ secret.DOCKERHUB_TOKEN}}
+      - name: build and release to DockerHub
+        env:
+          NAME: goguma1
+          REPO: flaskweb
+        run:
+          docker build -t ${{ secret.DOKCERHUB_REPO}}
+          docker tag${{ secret.DOKCERHUB_REPO}}:latest ${{ secret.DOKCERHUB_USERNAME}}/${{ secret.DOKCERHUB_REPO}}:latest
+          docker push ${{ secret.DOKCERHUB_USERNAME}}/${{ secret.DOKCERHUB_REPO}}:latest
