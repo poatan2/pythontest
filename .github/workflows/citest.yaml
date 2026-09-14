@@ -33,13 +33,13 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-actions
         with:
-          username: ${{ secret.DOKCERHUB_USERNAME}}
-          password: ${{ secret.DOCKERHUB_TOKEN}}
+          username: ${{ secrets.DOKCERHUB_USERNAME}}
+          password: ${{ secrets.DOCKERHUB_TOKEN}}
       - name: build and release to DockerHub
         env:
           NAME: goguma1
           REPO: flaskweb
         run:
-          docker build -t ${{ secret.DOKCERHUB_REPO}}
-          docker tag${{ secret.DOKCERHUB_REPO}}:latest ${{ secret.DOKCERHUB_USERNAME}}/${{ secret.DOKCERHUB_REPO}}:latest
-          docker push ${{ secret.DOKCERHUB_USERNAME}}/${{ secret.DOKCERHUB_REPO}}:latest
+          docker build -t ${{ secrets.DOKCERHUB_REPO}}
+          docker tag${{ secrets.DOKCERHUB_REPO}}:latest ${{ secrets.DOKCERHUB_USERNAME}}/${{ secret.DOKCERHUB_REPO}}:latest
+          docker push ${{ secrets.DOKCERHUB_USERNAME}}/${{ secrets.DOKCERHUB_REPO}}:latest
